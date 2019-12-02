@@ -1,7 +1,6 @@
 (ns core
   (:import (java.net ServerSocket))
-  (:require [clojure.java.io :as io])
-  )
+  (:require [clojure.java.io :as io]))
 
 (defn request-line->map [request-line]
   (zipmap [:method :path :protcol] (clojure.string/split request-line #" ")))
@@ -22,7 +21,6 @@
           (println request-line)
           (cond (= method "GET") (.write writer "HTTP/1.1 200 OK\n\nHello!!\n")
                 (= method "POST")　(.write writer "HTTP/1.1 201 Created\n\nHello!!\n")
-                :else (.write writer "HTTP/1.1 405 Method Not Allowed\n\nHello!!\n")
-                ))))))
+                :else (.write writer "HTTP/1.1 405 Method Not Allowed\n\nHello!!\n")))))))
 
 (-main)
