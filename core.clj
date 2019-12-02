@@ -3,6 +3,9 @@
   (:require [clojure.java.io :as io])
   )
 
+(defn request-line->map [request-line]
+  (zipmap [:method :path :protcol] (clojure.string/split request-line #" ")))
+
 (def port 8080)
 
 (defn -main []
@@ -14,13 +17,12 @@
                   reader (io/reader socket)
                   writer (io/writer socket)
                   ]
-        (println (.readLine reader))     
-        (.write writer
-                "HTTP/1.1 200 OK\n\nHello!!\n"
-                )
-        )
-      ) 
-    )
-  )
+        (let [request-line (request-line->map (.readLine reader))
+              method (request-line :method)]
+          (println request-line)
+          (cond (= method "GET") (.write writer "HTTP/1.1 200 OK\n\nHello!!\n")
+                (= method "POST")　(.write writer "HTTP/1.1 201 Created\n\nHello!!\n")
+                :else (.write writer "HTTP/1.1 405 Method Not Allowed\n\nHello!!\n")
+                ))))))
 
 (-main)
